@@ -1,0 +1,19 @@
+version: '3.8'
+#  local image mypsqllatest:mosql >> changed to global image to be pulled from my repo.
+
+services:
+  postgres:
+    image: simortusdocker/mypsqllatest:mosql
+    container_name: psql_container
+    environment:
+      POSTGRES_USER: mo
+      POSTGRES_PASSWORD: Not1.2.3.aga!n
+      POSTGRES_DB: modb
+    volumes:
+      - ./db-data:/var/lib/postgresql/data #store the volume changes within the springboot app folder.
+      #- postgres_volume:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_volume:
