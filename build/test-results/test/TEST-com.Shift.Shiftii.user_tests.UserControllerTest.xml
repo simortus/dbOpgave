@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.Shift.Shiftii.user_tests.UserControllerTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-12-14T09:37:42" hostname="Mohameds-MacBook-Pro.local" time="0.701">
+  <properties/>
+  <testcase name="testCreatingNewUsers()" classname="com.Shift.Shiftii.user_tests.UserControllerTest" time="0.701"/>
+  <system-out><![CDATA[10:37:37.562 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.Shift.Shiftii.user_tests.UserControllerTest]: UserControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+10:37:37.695 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.Shift.Shiftii.ShiftSApplication for test class com.Shift.Shiftii.user_tests.UserControllerTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.0)
+
+2023-12-14T10:37:38.109+01:00  INFO 1412 --- [    Test worker] c.S.S.user_tests.UserControllerTest      : Starting UserControllerTest using Java 20.0.2 with PID 1412 (started by mohamedmsaad in /Users/mohamedmsaad/Desktop/danskebankOpgave/Shiftii_1)
+2023-12-14T10:37:38.110+01:00  INFO 1412 --- [    Test worker] c.S.S.user_tests.UserControllerTest      : No active profile set, falling back to 1 default profile: "default"
+2023-12-14T10:37:38.819+01:00  INFO 1412 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-12-14T10:37:38.878+01:00  INFO 1412 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 51 ms. Found 3 JPA repository interfaces.
+2023-12-14T10:37:39.357+01:00  INFO 1412 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-12-14T10:37:39.402+01:00  INFO 1412 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.3.1.Final
+2023-12-14T10:37:39.429+01:00  INFO 1412 --- [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2023-12-14T10:37:39.649+01:00  INFO 1412 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-12-14T10:37:39.670+01:00  INFO 1412 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-12-14T10:37:39.850+01:00  INFO 1412 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@4e2cdc51
+2023-12-14T10:37:39.852+01:00  INFO 1412 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-12-14T10:37:39.880+01:00  WARN 1412 --- [    Test worker] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2023-12-14T10:37:40.761+01:00  INFO 1412 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+Hibernate: 
+    alter table if exists shifts 
+       drop constraint if exists FKhme133akejog0rib7h5tosjlc
+2023-12-14T10:37:40.782+01:00  WARN 1412 --- [    Test worker] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2023-12-14T10:37:40.782+01:00  WARN 1412 --- [    Test worker] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "shifts" does not exist, skipping
+Hibernate: 
+    alter table if exists shifts 
+       drop constraint if exists FK3dq4k4tt0x91h7kkabwrrkyho
+2023-12-14T10:37:40.784+01:00  WARN 1412 --- [    Test worker] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2023-12-14T10:37:40.784+01:00  WARN 1412 --- [    Test worker] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "shifts" does not exist, skipping
+Hibernate: 
+    drop table if exists shifts cascade
+2023-12-14T10:37:40.787+01:00  WARN 1412 --- [    Test worker] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2023-12-14T10:37:40.787+01:00  WARN 1412 --- [    Test worker] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "shifts" does not exist, skipping
+Hibernate: 
+    drop table if exists shops cascade
+2023-12-14T10:37:40.789+01:00  WARN 1412 --- [    Test worker] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2023-12-14T10:37:40.789+01:00  WARN 1412 --- [    Test worker] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "shops" does not exist, skipping
+Hibernate: 
+    drop table if exists users cascade
+2023-12-14T10:37:40.791+01:00  WARN 1412 --- [    Test worker] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2023-12-14T10:37:40.791+01:00  WARN 1412 --- [    Test worker] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "users" does not exist, skipping
+Hibernate: 
+    drop sequence if exists shift_id_sequence
+2023-12-14T10:37:40.793+01:00  WARN 1412 --- [    Test worker] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2023-12-14T10:37:40.794+01:00  WARN 1412 --- [    Test worker] o.h.engine.jdbc.spi.SqlExceptionHelper   : sequence "shift_id_sequence" does not exist, skipping
+Hibernate: 
+    drop sequence if exists shop_id_sequence
+2023-12-14T10:37:40.796+01:00  WARN 1412 --- [    Test worker] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2023-12-14T10:37:40.796+01:00  WARN 1412 --- [    Test worker] o.h.engine.jdbc.spi.SqlExceptionHelper   : sequence "shop_id_sequence" does not exist, skipping
+Hibernate: 
+    drop sequence if exists user_id_sequence
+2023-12-14T10:37:40.797+01:00  WARN 1412 --- [    Test worker] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2023-12-14T10:37:40.798+01:00  WARN 1412 --- [    Test worker] o.h.engine.jdbc.spi.SqlExceptionHelper   : sequence "user_id_sequence" does not exist, skipping
+Hibernate: 
+    create sequence shift_id_sequence start with 1 increment by 1
+Hibernate: 
+    create sequence shop_id_sequence start with 1 increment by 1
+Hibernate: 
+    create sequence user_id_sequence start with 1 increment by 1
+Hibernate: 
+    create table shifts (
+        end_time timestamp(6),
+        shift_duration bigint not null,
+        shift_id bigint not null,
+        shop_id bigint,
+        start_time timestamp(6),
+        user_id bigint,
+        primary key (shift_id)
+    )
+Hibernate: 
+    create table shops (
+        shop_id bigint not null,
+        shop_name varchar(255) not null unique,
+        primary key (shop_id)
+    )
+Hibernate: 
+    create table users (
+        user_id bigint not null,
+        email varchar(255) not null unique,
+        name varchar(255) not null unique,
+        primary key (user_id)
+    )
+Hibernate: 
+    alter table if exists shifts 
+       add constraint FKhme133akejog0rib7h5tosjlc 
+       foreign key (shop_id) 
+       references shops
+Hibernate: 
+    alter table if exists shifts 
+       add constraint FK3dq4k4tt0x91h7kkabwrrkyho 
+       foreign key (user_id) 
+       references users
+2023-12-14T10:37:40.853+01:00  INFO 1412 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-12-14T10:37:41.158+01:00  INFO 1412 --- [    Test worker] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2023-12-14T10:37:41.743+01:00  WARN 1412 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-12-14T10:37:42.078+01:00  INFO 1412 --- [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2023-12-14T10:37:42.087+01:00  INFO 1412 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2023-12-14T10:37:42.091+01:00  INFO 1412 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 2 ms
+2023-12-14T10:37:42.115+01:00  INFO 1412 --- [    Test worker] c.S.S.user_tests.UserControllerTest      : Started UserControllerTest in 4.281 seconds (process running for 5.48)
+Saved!
+Hibernate: 
+    select
+        nextval('shop_id_sequence')
+Hibernate: 
+    select
+        nextval('shop_id_sequence')
+Hibernate: 
+    select
+        nextval('shop_id_sequence')
+Hibernate: 
+    select
+        nextval('shop_id_sequence')
+Hibernate: 
+    select
+        nextval('shop_id_sequence')
+Hibernate: 
+    select
+        nextval('shop_id_sequence')
+Hibernate: 
+    select
+        nextval('shop_id_sequence')
+Hibernate: 
+    insert 
+    into
+        shops
+        (shop_name, shop_id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        shops
+        (shop_name, shop_id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        shops
+        (shop_name, shop_id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        shops
+        (shop_name, shop_id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        shops
+        (shop_name, shop_id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        shops
+        (shop_name, shop_id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        shops
+        (shop_name, shop_id) 
+    values
+        (?, ?)
+Hibernate: 
+    select
+        nextval('user_id_sequence')
+Hibernate: 
+    select
+        nextval('user_id_sequence')
+Hibernate: 
+    insert 
+    into
+        users
+        (email, name, user_id) 
+    values
+        (?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        users
+        (email, name, user_id) 
+    values
+        (?, ?, ?)
+Hibernate: 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        u1_0.email=? 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        nextval('user_id_sequence')
+Hibernate: 
+    insert 
+    into
+        users
+        (email, name, user_id) 
+    values
+        (?, ?, ?)
+Hibernate: 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        u1_0.email=? 
+    fetch
+        first ? rows only
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
