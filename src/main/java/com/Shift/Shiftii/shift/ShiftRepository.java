@@ -2,6 +2,7 @@ package com.Shift.Shiftii.shift;
 
 import com.Shift.Shiftii.shops.Shop;
 import com.Shift.Shiftii.user.User;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,13 +22,6 @@ public interface ShiftRepository extends JpaRepository<Shift, Long> {
     based on the method name. This is thanks to Spring Data JPA's method naming conventions.*/
     boolean existsByUserAndEndTimeAfter(User user, LocalDateTime now);
 
-    @Query("SELECT sh FROM Shift sh WHERE sh.user = :user AND sh.shop = :shop " +
-            "AND sh.endTime > :currentTime")
-    Optional<List<Shift>> findOngoingShiftsByUserAndShop(@Param("user") User user,
-                                               @Param("shop") Shop shop,
-                                               @Param("currentTime") LocalDateTime currentTime);
-
-
     @Query("select  sh from Shift sh")
     Optional<List<Shift>> getAll();
 
@@ -37,20 +31,27 @@ public interface ShiftRepository extends JpaRepository<Shift, Long> {
 
     @Query("select sh from Shift sh where sh.shiftId=?1")
     Optional<Shift> findShiftsById(Long shiftId);
-    boolean existsByShiftId(Long shiftId);
+    
 
-    @Query("SELECT sh FROM Shift sh " +
+
+    @Query(value = "SELECT sh FROM Shift sh " +
             "WHERE sh.user.email = :email " +
             "AND sh.shop.shopName = :shopName " +
-            "AND sh.startTime >= :startTime")
+            "AND sh.startTime >= :yesterday  ")
     Optional<List<Shift>> findShiftsInShopForUserLast24Hours(@Param("email") String email,
                                                              @Param("shopName") String shopName,
-                                                             @Param("startTime") LocalDateTime startTime);
+                                                             @Param("yesterday") LocalDateTime yesterday);
 
     @Query("SELECT sh FROM Shift sh WHERE sh.user.email = :email AND sh.shop.shopName = :shopName")
     Optional<List<Shift>> findShiftsInShopForUser(@Param("email") String userEmail, @Param("shopName") String shopName);
 
-
+    @Query(value = "SELECT sh FROM Shift sh " +
+            "WHERE sh.user.email = :email " +
+            "AND sh.shop.shopName = :shopName " +
+            "AND sh.startTime >= :fiveDaysAgo  ")
+    Optional<List<Shift>> findShiftsInShopForUserWithin5Days(@Param("email") String userEmail,
+                                                             @Param("shopName") String shopName,
+                                                             @Param("fiveDaysAgo") LocalDateTime fiveDaysAgo);
 }
 
 /*
