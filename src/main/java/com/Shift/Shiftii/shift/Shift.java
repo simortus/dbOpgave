@@ -53,7 +53,7 @@ public final class Shift {
         this.shop = shop;
         this.startTime = startTime;
         this.shiftDuration = shiftDuration;
-        setEndTime(startTime.plusHours(shiftDuration)); // set it in constructor with a private setter.
+        setEndTime(); // set it in constructor with a private setter.
     }
 
 
@@ -89,8 +89,8 @@ public final class Shift {
         this.shiftDuration = shiftDuration;
     }
 
-    private void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
+    private void setEndTime() {
+        this.endTime = this.startTime.plusHours(this.shiftDuration);
     }
 
     public void setShop(Shop shop) {
