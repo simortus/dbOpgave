@@ -41,17 +41,14 @@ public final class ShiftService {
      * @param shifts list of the user's shifts to calculate the total duration
      * @return the sum of shift durations within the last 24 hours
      */
-    private long shiftDurationTotalCalculator(List<Shift> shifts) {
+    private long shiftDurationTotalCalculator(List<Shift> shifts, Shift newShift) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime yesterday = now.minusHours(24);
-
         return shifts.stream()
-                .filter(shift -> shift.getStartTime().isAfter(yesterday) && shift.getEndTime().isBefore(now))
-                .mapToLong(Shift::getShiftDuration)
-                .sum();
+                .filter(shift -> shift.getStartTime().minusHours(24).isAfter(yesterday)).
+                mapToLong(Shift::getShiftDuration).sum();
 
     }
-
 
     /**
      * Retrieves all the ongoing shifts for a given user based on their email.
