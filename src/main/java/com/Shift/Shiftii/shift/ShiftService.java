@@ -42,11 +42,8 @@ public final class ShiftService {
      * @return the sum of shift durations within the last 24 hours
      */
     private long shiftDurationTotalCalculator(List<Shift> shifts, Shift newShift) {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime yesterday = now.minusHours(24);
-        return shifts.stream()
-                .filter(shift -> shift.getStartTime().minusHours(24).isAfter(yesterday)).
-                mapToLong(Shift::getShiftDuration).sum();
+        LocalDateTime yesterday = newShift.getStartTime().minusHours(23).minusMinutes(59);
+        return shifts.stream().mapToLong(Shift::getShiftDuration).sum();
 
     }
 
@@ -161,14 +158,14 @@ public final class ShiftService {
         final List<Shift> userShifts = shiftsInThisSHopForThisUserIn24H(
                 newShift.getUser().getEmail(),
                 newShift.getShop().getShopName(),
-                newShift.getStartTime().minusDays(1));
+                newShift.getStartTime().minusHours(23).minusMinutes(59));
         if (userShifts.isEmpty())
             return false;
-        // Calculate total duration within 24 hours
-        final long totalDurationWithin24Hours = shiftDurationTotalCalculator(userShifts);
+        // Calculate total duration of shifts if any exists within 24 hours
+        final long totalDurationWithin24Hours = shiftDurationTotalCalculator(userShifts, newShift);
         // Check if total duration exceeds 8 hours (add the new shift duration as well as it is within the 24h window
         System.out.println("Total hours in this shop: " + totalDurationWithin24Hours);
-        return totalDurationWithin24Hours < MAX_HOURS_AT_SHOP_WITHIN_24_HOURS + newShift.getShiftDuration();
+        return totalDurationWithin24Hours + newShift.getShiftDuration() > MAX_HOURS_AT_SHOP_WITHIN_24_HOURS ;
     }
 
     /**
