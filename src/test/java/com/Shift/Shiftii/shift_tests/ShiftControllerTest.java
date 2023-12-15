@@ -93,26 +93,26 @@ public class ShiftControllerTest {
     void testHasWorked5DaysInARowAtShop() {
         User user = new User("alice@gmail.com", "Alice Laice");
         Shop shop = new Shop("Home shop");
-        LocalDateTime startTime = LocalDateTime.now().plusDays(1);
+        LocalDateTime startTime = LocalDateTime.now().plusHours(1);
         // Define shift duration at 6 to avoid the condition 8h max /shop.
         long shiftDuration = 6; // Change this as needed
 
         Shift shift1 = new Shift(user, shop, startTime, shiftDuration);
         assertThat(this.shiftControleur.createNewShift(shift1).getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-        Shift shift2 = new Shift(user, shop, startTime.plusDays(1).plusMinutes(1), shiftDuration);
+        Shift shift2 = new Shift(user, shop, startTime.plusDays(1), shiftDuration);
         assertThat(this.shiftControleur.createNewShift(shift2).getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-        Shift shift3 = new Shift(user, shop, startTime.plusDays(2).plusMinutes(2), shiftDuration);
+        Shift shift3 = new Shift(user, shop, startTime.plusDays(2), shiftDuration);
         assertThat(this.shiftControleur.createNewShift(shift3).getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-        Shift shift4 = new Shift(user, shop, startTime.plusDays(3).plusMinutes(3), shiftDuration);
+        Shift shift4 = new Shift(user, shop, startTime.plusDays(3), shiftDuration);
         assertThat(this.shiftControleur.createNewShift(shift4).getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-        Shift shift5 = new Shift(user, shop, startTime.plusDays(4).plusMinutes(4), shiftDuration);
+        Shift shift5 = new Shift(user, shop, startTime.plusDays(4), shiftDuration);
         assertThat(this.shiftControleur.createNewShift(shift5).getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-        Shift shift6 = new Shift(user, shop, startTime.plusDays(5).plusMinutes(5), shiftDuration);
+        Shift shift6 = new Shift(user, shop, startTime.plusDays(5), shiftDuration);
         Throwable exception1 = assertThrows(IllegalArgumentException.class, () -> this.shiftControleur.createNewShift(shift6));
         assertThat(exception1.getMessage()).isEqualTo("Shift creation denied! The User has worked 5 days in a row Hours at this shop");
     }
@@ -144,7 +144,7 @@ public class ShiftControllerTest {
 
         // we create a shift that does not overlap but still within the same day
         long duration2 = 3;
-        LocalDateTime startTime2 = shift1.getEndTime().plusMinutes(30);
+        LocalDateTime startTime2 = shift1.getEndTime().plusMinutes(10);
 
         Shift shift2 = new Shift(existingUser, existingShop, startTime2, duration2);
 
