@@ -68,7 +68,7 @@ public final class ShiftService {
     /**
      * Checks whether a new shift overlaps with any ongoing shifts for the current user.
      *
-     * @param currentUser        the user for whom to check the shift overlap
+     * @param currentUser       the user for whom to check the shift overlap
      * @param newShiftStartTime the start time of the new shift
      * @param newShiftEndTime   the end time of the new shift
      * @return true if there's an overlap, false otherwise
@@ -137,11 +137,13 @@ public final class ShiftService {
      * @param shopName  the name of the shop to look in.
      * @return a list of shifts for the requested user in the specified shop within, or else an empty list!
      */
-    private List<Shift> shiftsInThisShopForThisUser(String userEmail, String shopName) {
+    private List<Shift> shiftsInThisShopForThisUserIn5Days(String userEmail, String shopName) {
+        LocalDateTime fiveDaysAgoTimeStamp = LocalDateTime.now().minusDays(5);
         return this.shiftRepository.
-                findShiftsInShopForUser(
+                findShiftsInShopForUserWithin5Days(
                         userEmail,
-                        shopName).
+                        shopName,
+                        fiveDaysAgoTimeStamp).
                 orElse(Collections.emptyList());
     }
 
@@ -149,7 +151,6 @@ public final class ShiftService {
      * Checks if a user has worked > 8 hours within the last 24 hours at the given shop.
      *
      * @param newShift the shift to be evaluated for the user:
-     *
      * @return true if the user has not worked more than 8 hours in the last 24 hours, false otherwise
      */
     private boolean hasWorked8hWithin24hInShop(Shift newShift) {
@@ -165,7 +166,7 @@ public final class ShiftService {
         final long totalDurationWithin24Hours = shiftDurationTotalCalculator(userShifts, newShift);
         // Check if total duration exceeds 8 hours (add the new shift duration as well as it is within the 24h window
         System.out.println("Total hours in this shop: " + totalDurationWithin24Hours);
-        return totalDurationWithin24Hours + newShift.getShiftDuration() > MAX_HOURS_AT_SHOP_WITHIN_24_HOURS ;
+        return totalDurationWithin24Hours + newShift.getShiftDuration() > MAX_HOURS_AT_SHOP_WITHIN_24_HOURS;
     }
 
     /**
@@ -177,7 +178,7 @@ public final class ShiftService {
      * @return boolean true if fiveConsecutiveDays ==5, else false.
      **/
     private boolean hasWorkedFiveDaysInaRowInThisShop(Shift shift) {
-        final List<Shift> userShiftsInSameShop = shiftsInThisShopForThisUser(
+        final List<Shift> userShiftsInSameShop = shiftsInThisShopForThisUserIn5Days(
                 shift.getUser().getEmail(),
                 shift.getShop().getShopName()
         );
@@ -185,11 +186,10 @@ public final class ShiftService {
         // if empty, no bother.
         if (userShiftsInSameShop.isEmpty())
             return false;
-
         // consecutive days counter (no 0day lol)
         return getConsecutiveDaysAtShop(userShiftsInSameShop) == MAX_DAYS_IN_A_ROW_AT_SHOP;
-
     }
+
     /**
      * Calculates the number of consecutive days a user has worked at the same shop based on the provided shift list..
      *
@@ -209,6 +209,7 @@ public final class ShiftService {
         }
         return consecutiveDaysAtShop;
     }
+
     /**
      * Checks if the provided shift's start time is in the past (before current time).
      *
@@ -282,7 +283,6 @@ public final class ShiftService {
         return true;
 
     }
-
 
     @Override
     public boolean equals(Object o) {
