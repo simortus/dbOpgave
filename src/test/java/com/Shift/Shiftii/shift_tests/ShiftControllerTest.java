@@ -58,7 +58,7 @@ public class ShiftControllerTest {
      * Test passed:1 NOT YET....
      **/
     @Test
-    void addUserToAShift() {
+    void testAddUserToAShift() {
         // testing the four cases.
         testCase1();
 
@@ -83,6 +83,28 @@ public class ShiftControllerTest {
          * -----------------------------------------------------------------------
          * All good if all tests are passed.
          */
+    }
+
+    @Test
+    void testUserCanWorkInMultipleShops(){
+        User user = new User("alice@gmail.com", "Alice Laice");
+        Shop homeShop = new Shop("Home shop");
+        LocalDateTime homeShopStartTime = LocalDateTime.now().plusHours(1);
+
+        // Define shift duration at 4 to test 4h in Home shop and 4 hours in Pets shop
+        long shiftDuration = 4; // Change this as needed
+
+        Shift shift1 = new Shift(user, homeShop, homeShopStartTime, shiftDuration);
+        assertThat(this.shiftControleur.createNewShift(shift1).getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        Shop petsShop = new Shop("Pets shop");
+        // the new shift starts when the other ends.
+        LocalDateTime petsShopStartTime = homeShopStartTime.plusHours(shiftDuration);
+
+
+        Shift shift2 = new Shift(user, petsShop, petsShopStartTime, shiftDuration);
+        assertThat(this.shiftControleur.createNewShift(shift2).getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
     }
 
     /**
