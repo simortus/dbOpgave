@@ -41,8 +41,7 @@ public final class ShiftService {
      * @param shifts list of the user's shifts to calculate the total duration
      * @return the sum of shift durations within the last 24 hours
      */
-    private long shiftDurationTotalCalculator(List<Shift> shifts, Shift newShift) {
-        LocalDateTime yesterday = newShift.getStartTime().minusHours(23).minusMinutes(59);
+    private long shiftDurationTotalCalculator(List<Shift> shifts) {
         return shifts.stream().mapToLong(Shift::getShiftDuration).sum();
 
     }
@@ -54,7 +53,7 @@ public final class ShiftService {
      * @param user for whom we retrieved ongoing shifts.
      * @return a list of ongoing shifts for this user
      */
-    public List<Shift> ongoingShiftsForUser(User user) {
+    private List<Shift> ongoingShiftsForUser(User user) {
         final LocalDateTime now = LocalDateTime.now();
         Optional<List<Shift>> optionalShiftList = this.shiftRepository.findShiftsByUserEmail(user.getEmail());
         if (optionalShiftList.isEmpty())
@@ -70,22 +69,27 @@ public final class ShiftService {
      *
      * @param currentUser       the user for whom to check the shift overlap
      * @param newShiftStartTime the start time of the new shift
-     * @param newShiftEndTime   the end time of the new shift
      * @return true if there's an overlap, false otherwise
      */
-    private boolean doesShiftOverlap(User currentUser, LocalDateTime newShiftStartTime, LocalDateTime newShiftEndTime) {
-        List<Shift> userShifts = ongoingShiftsForUser(currentUser);
+    private boolean doesShiftOverlap(User currentUser, LocalDateTime newShiftStartTime) {
+        final List<Shift> userShifts = ongoingShiftsForUser(currentUser);
         if (userShifts.isEmpty())
             return false;
         for (Shift shift : userShifts) {
-            final LocalDateTime existingShiftStartTime = shift.getStartTime();
+//            final LocalDateTime existingShiftStartTime = shift.getStartTime();
             final LocalDateTime existingShiftEndTime = shift.getEndTime();
 
+            /*
+             * After reading the documentation of LocalDateTime.isAfter(), it appears that neither the chronology
+             * nor the calendar system is taking into consideration.
+             *  Using compareTo from ChronoLocalDateTime is a much robust implementation!
+             */
+
+            //XXX if(newShiftStartTime.isBefore(existingShiftEndTime) && newShiftEndTime.isAfter(existingShiftStartTime))
             // Check for overlap condition: If the new shift starts before the existing shift ends
-            // AND the new shift ends after the existing shift starts, it's an overlap
-            if (newShiftStartTime.isBefore(existingShiftEndTime) && newShiftEndTime.isAfter(existingShiftStartTime)) {
+            if (newShiftStartTime.compareTo(existingShiftEndTime) < 0)
                 return true; // There is an overlap
-            }
+
         }
         return false; // No overlap found
     }
@@ -122,8 +126,7 @@ public final class ShiftService {
      * the last 24 hours if any are found,or else an empty list!
      */
     private List<Shift> shiftsInThisSHopForThisUserIn24H(String userEmail, String shopName, LocalDateTime newShiftStartTimeMinus24H) {
-        return this.shiftRepository.
-                findShiftsInShopForUserLast24Hours(
+        return this.shiftRepository.findShiftsInShopForUserLast24Hours(
                         userEmail,
                         shopName,
                         newShiftStartTimeMinus24H).
@@ -163,7 +166,7 @@ public final class ShiftService {
         if (userShifts.isEmpty())
             return false;
         // Calculate total duration of shifts if any exists within 24 hours
-        final long totalDurationWithin24Hours = shiftDurationTotalCalculator(userShifts, newShift);
+        final long totalDurationWithin24Hours = shiftDurationTotalCalculator(userShifts);
         // Check if total duration exceeds 8 hours (add the new shift duration as well as it is within the 24h window
         System.out.println("Total hours in this shop: " + totalDurationWithin24Hours);
         return totalDurationWithin24Hours + newShift.getShiftDuration() > MAX_HOURS_AT_SHOP_WITHIN_24_HOURS;
@@ -204,7 +207,9 @@ public final class ShiftService {
             LocalDateTime currentEndTime = currentShift.getEndTime();
             LocalDateTime nextStartTime = nextShift.getStartTime();
             //increment if true
-            if (currentEndTime.plusDays(1).isAfter(nextStartTime))
+            // currentEndTime.plusDays(1).isAfter(nextStartTime)
+            // same here as with HasOngoingShift. We use compareTo to include the chronology and the calendar system into consideration .
+            if (currentEndTime.plusDays(1).compareTo(nextStartTime) > 0)
                 consecutiveDaysAtShop++;
         }
         return consecutiveDaysAtShop;
@@ -217,7 +222,8 @@ public final class ShiftService {
      * @return true if the shift's start time is before the current time, false otherwise
      */
     private boolean isShiftOld(Shift newShift) {
-        return newShift.getStartTime().isBefore(LocalDateTime.now());
+        return newShift.getStartTime().compareTo(LocalDateTime.now()) < 0;
+//        return newShift.getStartTime().isBefore(LocalDateTime.now());
     }
 
     /**
@@ -257,7 +263,7 @@ public final class ShiftService {
          * If any shift overlaps with new shift:
          */
         System.out.println("Shift: " + newShift);
-        if (doesShiftOverlap(user, newShift.getStartTime(), newShift.getEndTime()))
+        if (doesShiftOverlap(user, newShift.getStartTime()))
             throw new IllegalArgumentException("Cannot book a new shift. You have an ongoing shift already!");
 
         /*
@@ -298,7 +304,6 @@ public final class ShiftService {
     public int hashCode() {
         return Objects.hash(this.shiftRepository, this.shopRepository, this.userRepository);
     }
-
 
     @Override
     public String toString() {

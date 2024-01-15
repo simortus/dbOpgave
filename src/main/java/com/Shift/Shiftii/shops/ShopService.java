@@ -1,14 +1,9 @@
 package com.Shift.Shiftii.shops;
 
-import com.Shift.Shiftii.shift.Shift;
-import com.Shift.Shiftii.shift.ShiftRepository;
-import com.Shift.Shiftii.user.User;
-import com.Shift.Shiftii.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -80,7 +75,6 @@ public class ShopService {
             return true;
         }
     }
-
 
     @Override
     public boolean equals(Object o) {

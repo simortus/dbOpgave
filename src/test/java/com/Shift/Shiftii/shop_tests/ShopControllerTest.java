@@ -4,21 +4,16 @@ import com.Shift.Shiftii.shops.Shop;
 import com.Shift.Shiftii.shops.ShopControleur;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@AutoConfigureMockMvc
 public class ShopControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
     @Autowired
     private ShopControleur shopControleur;
 
@@ -32,7 +27,7 @@ public class ShopControllerTest {
     }
 
     /**
-     * Testing if get all shops does not return a null instance.
+     * Testing if all shops does not return a null instance.
      * Test passed:1 √
      **/
     @Test

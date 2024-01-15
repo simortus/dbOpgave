@@ -12,9 +12,9 @@ import java.util.List;
 @RequestMapping(path = "/api/v1.0/shifts")
 public class ShiftControleur {
 
+    @Autowired
     private final ShiftService shiftService;
 
-    @Autowired
     public ShiftControleur(ShiftService shiftService) {
         this.shiftService = shiftService;
     }
