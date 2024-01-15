@@ -2,7 +2,6 @@ package com.Shift.Shiftii;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
@@ -36,10 +35,4 @@ public class ShiftSApplication {
 
     }
 
-
-    @GetMapping("/")
-    public String greetings() {
-
-        return "Nothing for now :)";
-    }
 }

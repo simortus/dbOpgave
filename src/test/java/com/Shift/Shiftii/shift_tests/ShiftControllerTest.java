@@ -4,24 +4,24 @@ import com.Shift.Shiftii.shift.Shift;
 import com.Shift.Shiftii.shift.ShiftControleur;
 import com.Shift.Shiftii.shops.Shop;
 import com.Shift.Shiftii.user.User;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+
 @SpringBootTest
-@AutoConfigureMockMvc
+@Transactional
+// added this to avoid keeping database changes which will break the tests when running the entire class
+// Since I am using the same user for different test cases! Some tests will break!
 public class ShiftControllerTest {
 
-    @Autowired
-    MockMvc mockMvc;
     @Autowired
     private ShiftControleur shiftControleur;
 
@@ -58,7 +58,7 @@ public class ShiftControllerTest {
      * Test passed:1 NOT YET....
      **/
     @Test
-    void addUserToAShift() {
+    void testAddUserToAShift() {
         // testing the four cases.
         testCase1();
 
@@ -83,6 +83,28 @@ public class ShiftControllerTest {
          * -----------------------------------------------------------------------
          * All good if all tests are passed.
          */
+    }
+
+    @Test
+    void testUserCanWorkInMultipleShops(){
+        User user = new User("alice@gmail.com", "Alice Laice");
+        Shop homeShop = new Shop("Home shop");
+        LocalDateTime homeShopStartTime = LocalDateTime.now().plusHours(1);
+
+        // Define shift duration at 4 to test 4h in Home shop and 4 hours in Pets shop
+        long shiftDuration = 4; // Change this as needed
+
+        Shift shift1 = new Shift(user, homeShop, homeShopStartTime, shiftDuration);
+        assertThat(this.shiftControleur.createNewShift(shift1).getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        Shop petsShop = new Shop("Pets shop");
+        // the new shift starts when the other ends.
+        LocalDateTime petsShopStartTime = homeShopStartTime.plusHours(shiftDuration);
+
+
+        Shift shift2 = new Shift(user, petsShop, petsShopStartTime, shiftDuration);
+        assertThat(this.shiftControleur.createNewShift(shift2).getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
     }
 
     /**
@@ -305,6 +327,11 @@ public class ShiftControllerTest {
         Shift shift1 = new Shift(existingUser, exisitingShop, LocalDateTime.now().plusDays(1), duration);
         assertThat(this.shiftControleur.createNewShift(shift1).getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
+
+//    @AfterEach
+//    public void cleanup() {
+//        // Perform cleanup operations, such as releasing resources, closing connections, etc.
+//    }
 
 
 }
